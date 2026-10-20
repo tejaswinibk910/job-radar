@@ -15,7 +15,7 @@ def greenhouse(slug):
         out.append(make_job(
             "greenhouse", j.get("company_name") or slug.title(), j.get("title"),
             (j.get("location") or {}).get("name"), j.get("absolute_url"),
-            strip_html(j.get("content")), j.get("first_published") or j.get("updated_at"),
+            strip_html(j.get("content")), j.get("first_published"),  # updated_at isn't a post date
         ))
     return out
 

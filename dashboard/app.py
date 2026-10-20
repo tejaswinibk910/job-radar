@@ -12,6 +12,17 @@ st.set_page_config(page_title="Job Radar", page_icon="🎯", layout="wide")
 
 STATUSES = ["Saved", "Applied", "OA", "Interview", "Offer", "Rejected", "Withdrawn"]
 CATEGORIES = ["CV / Perception", "ML / AI", "SWE"]
+LEVELS = ["New Grad", "Entry", "Unknown", "Mid"]
+
+
+def level_filter(q, levels):
+    """Unknown also matches jobs scored before seniority existed (NULL)."""
+    if not levels or set(levels) == set(LEVELS):
+        return q.or_("seniority.is.null,seniority.neq.Senior")
+    vals = ",".join(f'"{l}"' for l in levels)
+    if "Unknown" in levels:
+        return q.or_(f"seniority.in.({vals}),seniority.is.null")
+    return q.in_("seniority", levels)
 
 
 # ---------- auth + db ----------
@@ -45,28 +56,41 @@ def applied_job_ids():
     return {r["job_id"] for r in rows}
 
 
+@st.cache_data(ttl=3600)
+def first_load_day():
+    rows = db().table("jobs").select("first_seen").order("first_seen").limit(1).execute().data
+    return dt.date.fromisoformat(rows[0]["first_seen"]) if rows else dt.date.today()
+
+
 @st.cache_data(ttl=300)
-def new_jobs(since, min_score, cats):
-    q = (db().table("jobs").select("*").gte("first_seen", since.isoformat()).eq("hidden", False)
-         .gte("score", min_score).order("score", desc=True).limit(300))
+def new_jobs(hours, min_score, cats, levels, sort):
+    """Posted within the window. Undated jobs count by when we first found them,
+    except the initial bulk load (those are old postings, not new ones)."""
+    since_ts = (dt.datetime.now(dt.timezone.utc) - dt.timedelta(hours=hours)).isoformat()
+    since_day = max((dt.datetime.now(dt.timezone.utc) - dt.timedelta(hours=hours)).date(),
+                    first_load_day() + dt.timedelta(days=1))
+    q = (db().table("jobs").select("*").eq("hidden", False).gte("score", min_score)
+         .or_(f"posted_at.gte.{since_ts},and(posted_at.is.null,first_seen.gte.{since_day.isoformat()})")
+         .order("score" if sort == "Best match" else "posted_at", desc=True, nullsfirst=False).limit(300))
     if cats:
         q = q.in_("category", cats)
-    return q.execute().data
+    return level_filter(q, levels).execute().data
 
 
 @st.cache_data(ttl=300)
-def archive_jobs(text, min_score, cats, sources, days, sort, page, page_size=25):
+def archive_jobs(text, min_score, cats, levels, sources, days, sort, page, page_size=25):
     q = db().table("jobs").select("*", count="exact").eq("hidden", False).gte("score", min_score)
     if text:
         t = re.sub(r"[,()%*]", " ", text).strip()
         q = q.or_(f"title.ilike.*{t}*,company.ilike.*{t}*,description.ilike.*{t}*")
     if cats:
         q = q.in_("category", cats)
+    q = level_filter(q, levels)
     if sources:
         q = q.in_("source", sources)
     if days:
         q = q.gte("first_seen", (dt.date.today() - dt.timedelta(days=days)).isoformat())
-    q = q.order("score" if sort == "Best match" else "first_seen", desc=True)
+    q = q.order("score" if sort == "Best match" else "posted_at", desc=True, nullsfirst=False)
     res = q.range(page * page_size, page * page_size + page_size - 1).execute()
     return res.data, res.count or 0
 
@@ -184,15 +208,26 @@ def people_panel(job, key):
     st.caption("Verify before reaching out: the person hiring for this exact role may not show up here.")
 
 
+def posted_label(job):
+    p = job.get("posted_at")
+    if not p:
+        return "post date unknown"
+    try:
+        d = (dt.datetime.now(dt.timezone.utc) - dt.datetime.fromisoformat(p.replace("Z", "+00:00"))).days
+    except Exception:
+        return f"posted {p[:10]}"
+    return "posted today" if d <= 0 else "posted yesterday" if d == 1 else f"posted {d}d ago"
+
+
 # ---------- ui pieces ----------
 def job_card(job, key):
     with st.container(border=True):
         left, right = st.columns([6, 1])
         title = (job["title"] or "").replace("[", "(").replace("]", ")")
         left.markdown(f"**[{title}]({job['url']})**  \n{job['company']}")
-        posted = (job.get("posted_at") or "")[:10] or "unknown"
         left.caption(f"{job['location'] or 'Location n/a'}  |  {job.get('category') or ''}  |  "
-                     f"via {job['source']}  |  posted {posted}  |  found {job['first_seen']}")
+                     f"{job.get('seniority') or 'Unknown'}  |  "
+                     f"via {job['source']}  |  {posted_label(job)}")
         if job.get("matched_keywords"):
             left.caption("Matched: " + ", ".join(job["matched_keywords"][:8]))
         right.metric("Match", f"{job['score']:.0f}")
@@ -211,6 +246,7 @@ with st.sidebar:
     st.header("Filters")
     min_score = st.slider("Min match score", 0, 100, 40, 5)
     cats = st.multiselect("Role type", CATEGORIES, default=CATEGORIES)
+    levels = st.multiselect("Level", LEVELS, default=["New Grad", "Entry", "Unknown"])
     if st.button("Refresh data"):
         refresh()
 
@@ -226,9 +262,12 @@ m4.metric("Offers", sum(a["status"] == "Offer" for a in apps))
 tab_new, tab_archive, tab_tracker = st.tabs(["New", "Archive", "Tracker"])
 
 with tab_new:
-    window = st.radio("Found in the last", ["1 day", "3 days", "7 days"], horizontal=True)
-    since = dt.date.today() - dt.timedelta(days=int(window.split()[0]))
-    jobs = [j for j in new_jobs(since, min_score, tuple(cats)) if j["id"] not in applied_ids]
+    w1, w2 = st.columns([3, 1])
+    window = w1.radio("Posted in the last", ["24 hours", "3 days", "7 days"], horizontal=True)
+    new_sort = w2.selectbox("Sort", ["Best match", "Newest"], key="new_sort")
+    hours = {"24 hours": 24, "3 days": 72, "7 days": 168}[window]
+    jobs = [j for j in new_jobs(hours, min_score, tuple(cats), tuple(levels), new_sort)
+            if j["id"] not in applied_ids]
     st.caption(f"{len(jobs)} new matches")
     if not jobs:
         st.info("Nothing new above your score threshold. Try lowering it in the sidebar.")
@@ -244,7 +283,7 @@ with tab_archive:
     days = None if days_label == "Any time" else int(days_label.split()[0])
 
     page = st.session_state.get("page", 0)
-    rows, total = archive_jobs(text, min_score, tuple(cats), tuple(sources), days, sort, page)
+    rows, total = archive_jobs(text, min_score, tuple(cats), tuple(levels), tuple(sources), days, sort, page)
     pages = max(1, -(-total // 25))
     st.caption(f"{total} postings  |  page {page + 1} of {pages}")
     for j in rows:
