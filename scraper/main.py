@@ -1,6 +1,7 @@
 """Daily run: scrape all sources -> filter -> dedupe -> score new jobs -> store in Supabase."""
 import logging
 import os
+import re
 import sys
 from concurrent.futures import ThreadPoolExecutor
 
@@ -70,7 +71,14 @@ def main():
     url, key = os.environ.get("SUPABASE_URL"), os.environ.get("SUPABASE_KEY")
     if not url or not key:
         sys.exit("Set SUPABASE_URL and SUPABASE_KEY env vars.")
-    db = create_client(url, key)
+    m = re.match(r"\s*(https://[^/\s]+)", url)
+    if not m:
+        sys.exit(f"SUPABASE_URL should look like https://abcd.supabase.co")
+    db = create_client(m.group(1), key.strip())
+    try:  # fail fast before spending 15 min scraping
+        db.table("jobs").select("id").limit(1).execute()
+    except Exception as e:
+        sys.exit(f"Can't reach the jobs table. Check SUPABASE_URL/SUPABASE_KEY and that schema.sql ran. ({e})")
 
     cfg, companies = load_yaml("config.yaml"), load_yaml("companies.yaml")
     flt = Filters(cfg)
