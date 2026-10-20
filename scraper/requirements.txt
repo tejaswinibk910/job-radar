@@ -1,0 +1,6 @@
+requests>=2.31
+pyyaml>=6.0
+numpy>=1.26
+supabase>=2.10
+fastembed>=0.4
+python-jobspy>=1.1.80

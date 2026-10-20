@@ -1,0 +1,35 @@
+Tejaswini Balamurugan Kanimozhi
+(contact info intentionally left out of this file; only the content below is used for matching)
+
+EDUCATION
+University of Rochester, MS in Computer Science, GPA 3.77/4.0, Aug 2025 - Present (graduating December 2026)
+Amrita Vishwa Vidyapeetham, B.Tech in Computer Science, 2020 - 2024
+
+WORK EXPERIENCE
+EagleHawk One Inc, AI & Machine Learning Intern, Jun 2026 - Present
+Engineered multimodal computer vision pipelines processing RGB, thermal and radiometric TIFFs for drone-based inspections of 10,000+ acres of client infrastructure.
+Developed a 2-stage cross-modal co-registration pipeline matching thermal-visual imagery across flights: a dual encoder for candidate shortlisting and a pretrained transformer matcher for RANSAC-verified homography, achieving 95% Recall@1.
+Automated cross-modal alignment across 100+ images per batch, reducing processing time from 10 hours to under 3 minutes.
+Built an automated rooftop leak detection system by training a YOLO segmentation model on 1,500+ self-annotated thermal leak candidates, achieving 70% precision.
+Fine-tuned a real-time detection transformer (RF-DETR) to detect roofs and mechanical units; used homography-translated detections to filter false positives, cutting them by 40%.
+Designed a full-stack Flask/JavaScript review tool integrating the inspection pipeline with an accept/reject workflow, in active use by analysts, with models retrained regularly on newly reviewed data.
+
+University of Rochester Earth Imaging Lab, Research Assistant, Dec 2025 - Present
+Designed and optimized a distributed data processing pipeline using MPI-parallelized Python on a SLURM HPC cluster, reducing runtime from 5 hours to under 2 minutes (100x speedup).
+Developed a UNet-based deep learning model achieving 95%+ accuracy on FTAN spectrograms; optimized GPU kernels in PyTorch to accelerate model training at scale.
+
+BNP Paribas ISPL, Associate Software Engineer, Jan 2024 - Aug 2025
+Developed robotic process automations with Blue Prism and Power Automate, reducing manual effort by 70%.
+Led platform upgrade and migration of about 200 bots with comprehensive regression testing.
+Built automation web applications using .NET and C#, Power BI dashboards, and a Python chatbot to automate IT ticket creation.
+
+PROJECTS
+Multimodal Tool Wear Prediction with Isotropic Architecture: multimodal transformer in PyTorch fusing 9 heterogeneous sensor streams via shared isotropic patch embedding, 26x parameter reduction to 1.34M; cross-modal attention fusion; joint classification and regression heads, 91% accuracy, 10-fold cross-validation.
+AMG-PC Adaptive Modality-Gated Point Cloud Completion: trimodal network completing partial 3D point clouds from incomplete LiDAR scans; 17.3% Chamfer distance improvement over baseline on ShapeNet-ViPC; PointNet++ encoder, ResNet-18 image encoder, BLIP-2/CLIP text encoder, gated coarse-to-fine decoder with bidirectional cross-attention fusion; adaptive modality gate trained from task loss alone.
+
+SKILLS
+Languages: Python, C, C++, C#, Java, JavaScript, Bash
+ML/AI: PyTorch, TensorFlow, CUDA, SciPy, ObsPy, scikit-learn, Pandas, NumPy, Hugging Face Transformers
+Computer Vision: OpenCV, YOLOv8, Mask R-CNN, RF-DETR, ViT, XoFTR, image registration, segmentation, object detection, 3D point clouds
+Backend: PostgreSQL, MongoDB, Redis, AWS S3, Node.js, Express.js, FastAPI, REST APIs
+Tools: Git, Docker, AWS, SLURM, .NET, React, Next.js, Power BI

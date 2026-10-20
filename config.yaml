@@ -1,0 +1,129 @@
+# ---- What to search for ----
+# Aggregators (LinkedIn/Indeed/Google/etc.) run one search per term.
+search_terms:
+  - machine learning engineer new grad
+  - computer vision engineer
+  - AI engineer entry level
+  - applied scientist
+  - deep learning engineer
+  - machine learning engineer
+  - data scientist new grad
+  - software engineer new grad
+
+# Workday & SmartRecruiters need search text; keep these short and broad.
+ats_search_terms:
+  - machine learning
+  - computer vision
+  - artificial intelligence
+  - software engineer
+
+# A job is kept only if its TITLE matches one of these (regex, case-insensitive)
+title_include:
+  - machine learning
+  - '\bml\b'
+  - '\bai\b'
+  - artificial intelligence
+  - computer vision
+  - deep learning
+  - data scien
+  - applied scien
+  - research (engineer|scientist)
+  - perception
+  - '\bnlp\b'
+  - '\bllm'
+  - generative
+  - robotics
+  - '\bmlops\b'
+  # SWE (lowest tier, still collected)
+  - 'software (development )?engineer'
+  - 'software developer'
+  - '\bswe\b'
+  - 'back.?end'
+  - 'full.?stack'
+  - 'data engineer'
+
+# ...and dropped if its TITLE matches any of these
+title_exclude:
+  - '\bsenior\b'
+  - '\bsr\.?\b'
+  - '\bstaff\b'
+  - '\bprincipal\b'
+  - '\blead\b'
+  - '\bmanager\b'
+  - '\bdirector\b'
+  - '\bhead of\b'
+  - '\bvp\b'
+  - '\bdistinguished\b'
+  - '\barchitect\b'
+  # - '\bintern' # uncomment to hide internships
+
+# Hard filter: dropped if title or description mentions any of these
+clearance_patterns:
+  - security clearance
+  - clearance required
+  - active clearance
+  - secret clearance
+  - 'ts/sci'
+  - top secret
+  - polygraph
+  - must be clearable
+
+# ---- Role tiers: first match on the TITLE wins. Points are added to the score. ----
+# Broad ML matches rank close to CV; SWE is kept but sinks below both.
+role_tiers:
+  - name: CV / Perception
+    pattern: 'computer vision|\bcv\b|perception|imaging|vision|\b3d\b|lidar|robotics|autonomous|geospatial|remote sensing'
+    points: 6
+  - name: ML / AI
+    pattern: 'machine learning|\bml\b|\bai\b|artificial intelligence|deep learning|data scien|applied scien|research|\bnlp\b|\bllm|generative|mlops'
+    points: 3
+  - name: SWE
+    pattern: '.'
+    points: -12
+
+# ---- Scoring (0-100) ----
+scoring:
+  similarity_weight: 70        # semantic resume match contributes up to this much
+  sim_floor: 0.55              # cosine sim at or below this -> 0 similarity points
+  sim_ceiling: 0.85            # cosine sim at or above this -> full points
+  keyword_boost_cap: 25
+  boost_keywords:              # +points if found in title/description
+    pytorch: 3
+    computer vision: 4
+    segmentation: 4
+    object detection: 3
+    transformer: 3
+    multimodal: 4
+    point cloud: 4
+    lidar: 3
+    '\b3d\b': 2
+    thermal: 3
+    drone|uav|aerial: 3
+    image registration|homography: 3
+    yolo|detr: 2
+    opencv: 2
+    perception: 3
+    autonomous: 2
+    sensor fusion: 3
+    '\brag\b': 3
+    '\bllm': 3
+    deep learning: 2
+    cuda: 2
+    distributed training: 2
+    hpc: 2
+    new grad: 6
+    'university graduate': 6
+    entry.level: 5
+    early career: 5
+    "master'?s": 2
+  penalties:                   # -points if found
+    '([5-9]|1[0-9])\+? years': 15
+    'phd (required|only)': 12
+    'senior': 8
+
+min_score_default: 40          # dashboard default filter
+
+jobspy:
+  sites: [linkedin, indeed, google, zip_recruiter, glassdoor]
+  results_per_term: 30
+  hours_old: 48

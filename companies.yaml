@@ -1,0 +1,79 @@
+# Companies scraped directly from their career-site APIs.
+# Add a company: find its careers page, run  python -m scraper.tools detect <careers-url>
+# then add the slug below. Run  python -m scraper.tools validate  to check every entry.
+
+greenhouse:   # boards.greenhouse.io/<slug>
+  - anthropic
+  - deepmind
+  - xai
+  - scaleai
+  - databricks
+  - figma
+  - stripe
+  - airbnb
+  - pinterest
+  - robinhood
+  - waymo
+  - nuro
+  - andurilindustries
+  - appliedintuition
+  - aurorainnovation
+  - skydio
+  - instacart
+  - dropbox
+  - coinbase
+  - discord
+  - reddit
+  - lyft
+  - gitlab
+  - cloudflare
+  - datadog
+  - mongodb
+  - samsara
+  - brex
+  - affirm
+  - asana
+  - duolingo
+  - roblox
+  - doordashusa
+  - twilio
+  - okta
+  - elastic
+  - chime
+  - gusto
+  - flexport
+  - vercel
+  - hudsonrivertrading
+
+lever:        # jobs.lever.co/<slug>
+  - palantir
+  - spotify
+  - mistral
+  - shieldai
+  - zoox
+
+ashby:        # jobs.ashbyhq.com/<slug>
+  - openai
+  - notion
+  - cohere
+  - perplexity
+  - ramp
+  - linear
+  - replit
+  - harvey
+  - elevenlabs
+  - modal
+  - runway
+  - decagon
+
+workday:      # <tenant>.<wd>.myworkdayjobs.com/<site>
+  - {name: NVIDIA,     tenant: nvidia,     wd: wd5,  site: NVIDIAExternalCareerSite}
+  - {name: Salesforce, tenant: salesforce, wd: wd12, site: External_Career_Site}
+  - {name: Adobe,      tenant: adobe,      wd: wd5,  site: external_experienced}
+  - {name: Intel,      tenant: intel,      wd: wd1,  site: External}
+  - {name: Workday,    tenant: workday,    wd: wd5,  site: Workday}
+  - {name: Capital One, tenant: capitalone, wd: wd12, site: Capital_One}
+
+smartrecruiters:   # jobs.smartrecruiters.com/<id>
+  - Visa
+  - BoschGroup
