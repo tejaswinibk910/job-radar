@@ -1,0 +1,275 @@
+# One company per line. Optional extra slug guesses after "|", comma-separated.
+# Run the "discover-companies" workflow (or: python -m scraper.tools discover) to find which work.
+
+# --- AI labs & model companies ---
+Anthropic
+OpenAI
+Cohere
+Mistral | mistralai, mistral-ai
+Perplexity | perplexityai, perplexity-ai
+xAI
+Character AI | character, characterai
+Inflection AI | inflection
+Adept | adept
+Reka | reka-ai
+Together AI | together, togetherai
+Fireworks AI | fireworksai, fireworks
+Anyscale
+Hugging Face | huggingface
+Stability AI | stabilityai
+Midjourney
+Runway | runwayml
+Pika | pika
+Luma AI | luma, lumalabs, luma-ai
+ElevenLabs
+Black Forest Labs | blackforestlabs
+Contextual AI | contextualai
+Sierra | sierra
+Decagon
+Glean | gleanwork
+Writer | writer
+Jasper | jasper
+Imbue
+Essential AI | essentialai
+Physical Intelligence | physicalintelligence, physical-intelligence
+Skild AI | skildai, skild
+World Labs | worldlabs
+Thinking Machines | thinkingmachines
+Safe Superintelligence | ssi
+Magic | magic
+Poolside | poolside
+Cognition | cognition
+Cursor | anysphere
+Codeium | windsurf, codeium
+Replit
+Harvey
+Abridge
+Hebbia
+Hippocratic AI | hippocraticai
+Scale AI | scaleai
+Snorkel AI | snorkelai
+Labelbox
+Weights & Biases | wandb, weightsandbiases
+Modal | modal
+Baseten
+Replicate
+Lambda | lambdalabs, lambda
+CoreWeave
+Crusoe | crusoe, crusoeenergy
+Cerebras | cerebrassystems, cerebras
+SambaNova | sambanovasystems
+Groq
+d-Matrix | dmatrix
+Etched | etched
+Tenstorrent
+Lightmatter
+SiFive
+Pinecone | pinecone
+Weaviate
+Chroma | trychroma
+LangChain | langchain
+LlamaIndex | llamaindex
+Databricks
+Snowflake
+# --- Autonomy, robotics, perception ---
+Waymo
+Zoox
+Nuro
+Aurora | aurora-innovation, aurorainnovation, aurora
+Applied Intuition | appliedintuition, applied-intuition
+Kodiak Robotics | kodiak, kodiakrobotics
+Plus | plus, plusai
+Gatik
+Waabi
+Motional
+May Mobility | maymobility
+Torc Robotics | torcrobotics, torc
+Stack AV | stackav
+Wayve
+Tesla
+Rivian
+Lucid Motors | lucidmotors
+Figure AI | figureai, figure
+1X | 1x, 1xtechnologies
+Agility Robotics | agilityrobotics
+Apptronik
+Boston Dynamics | bostondynamics
+Sanctuary AI | sanctuary
+Covariant
+Dexterity | dexterity
+Mujin
+Locus Robotics | locusrobotics
+Symbotic
+Nimble Robotics | nimblerobotics, nimble
+Formic
+Machina Labs | machinalabs
+Bright Machines | brightmachines
+Path Robotics | pathrobotics
+Carbon Robotics | carbonrobotics
+Bear Robotics | bearrobotics
+Serve Robotics | serverobotics
+Starship Technologies | starship
+Zipline | flyzipline, zipline
+Skydio
+Shield AI | shieldai
+Anduril | andurilindustries
+Saronic | saronic
+Hermeus
+Joby Aviation | jobyaviation
+Archer Aviation | archer
+Wisk
+Reliable Robotics | reliablerobotics
+Merlin Labs | merlinlabs
+Built Robotics | builtrobotics
+Bedrock Robotics | bedrockrobotics
+Monarch Tractor | monarchtractor
+Blue River Technology | bluerivertechnology
+# --- Drones, geospatial, inspection (your thermal/drone work) ---
+Percepto
+DroneDeploy | dronedeploy
+Planet | planetlabs, planet
+BlackSky | blacksky
+Maxar
+Capella Space | capellaspace
+Umbra | umbra
+Muon Space | muonspace
+Descartes Labs | descarteslabs
+EarthDaily | earthdaily
+Gecko Robotics | geckorobotics
+Exyn Technologies | exyn
+ANYbotics | anybotics
+Hover | hover
+Nearmap
+EagleView | eagleview
+Cape Analytics | capeanalytics
+Zesty AI | zestyai
+Matterport
+Niantic
+Niantic Spatial | nianticspatial
+# --- Medical imaging / health AI ---
+Viz.ai | vizai, viz
+Aidoc
+Paige | paige, paigeai
+PathAI
+Tempus
+Butterfly Network | butterflynetwork
+Hyperfine
+Subtle Medical | subtlemedical
+Rad AI | radai
+Owkin
+Insitro
+Recursion | recursionpharmaceuticals, recursion
+Isomorphic Labs | isomorphiclabs
+Iambic Therapeutics | iambic
+Freenome
+Verily
+Flatiron Health | flatironhealth
+# --- AR/VR, 3D, graphics, CV products ---
+Snap | snapchat, snap
+Magic Leap | magicleap
+Niantic Labs | nianticlabs
+Unity | unity3d, unity
+Roblox
+Figma
+Canva
+Adobe
+Lightricks
+Descript
+Captions | captions
+Pinterest
+Shutterstock
+Getty Images | gettyimages
+Verkada
+Samsara
+Motive | gomotive, motive
+Netradyne
+Lytx
+Flock Safety | flocksafety
+Rhombus | rhombus
+Standard AI | standard, standardcognition
+Zebra Technologies | zebra
+Cognex
+Landing AI | landingai
+Roboflow
+Voxel51
+Encord
+V7 | v7labs
+Hive | hive, thehive
+Clarifai
+Twelve Labs | twelvelabs
+# --- Big tech / semis (many use Workday; LinkedIn covers the rest) ---
+NVIDIA
+AMD
+Qualcomm
+Intel
+Arm
+Micron
+Samsung Semiconductor | samsungsemiconductor
+Apple
+Google
+Meta
+Microsoft
+Amazon
+Netflix
+Uber
+Lyft
+Airbnb
+DoorDash | doordashusa
+Instacart
+Spotify
+Stripe
+Square | block, square
+Robinhood
+Coinbase
+Plaid
+Ramp
+Brex
+Affirm
+Chime
+Datadog
+Cloudflare
+MongoDB
+Elastic
+Confluent
+HashiCorp
+GitLab
+Vercel
+Notion
+Linear
+Asana
+Atlassian
+Dropbox
+Discord
+Reddit
+Duolingo
+Twilio
+Okta
+Palantir
+Salesforce
+ServiceNow
+Workday
+Intuit
+Capital One
+Bloomberg
+Two Sigma | twosigma
+Citadel
+Jane Street | janestreet
+Hudson River Trading | hudsonrivertrading, hrt
+DE Shaw | deshaw
+Jump Trading | jumptrading
+Optiver
+IMC Trading | imc
+Five Rings | fiverings
+SIG | sig, susquehanna
+Akuna Capital | akunacapital
+Tower Research | towerresearchcapital
+# --- Rochester / NY area ---
+L3Harris
+Paychex
+Xerox
+Kodak | eastmankodak
+Bausch + Lomb | bauschlomb
+Wegmans
+Datto
+CloudCheckr
+Brand Networks | brandnetworks

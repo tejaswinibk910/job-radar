@@ -1,5 +1,8 @@
 import datetime as dt
 import re
+from urllib.parse import quote_plus
+
+import requests
 
 import pandas as pd
 import streamlit as st
@@ -97,6 +100,90 @@ def hide_job(job):
     refresh()
 
 
+# ---------- people finder ----------
+EMAIL_RE = re.compile(r"[\w.+-]+@[\w-]+\.[\w.-]+")
+GENERIC_INBOX = re.compile(r"^(noreply|no-reply|privacy|accommodations?|legal|support|info|security|benefits)@", re.I)
+RELEVANT_POS = re.compile(r"machine learning|\bml\b|\bai\b|vision|perception|data|research|engineer|"
+                          r"cto|founder|head|vp|director|manager|recruit|talent|hiring|people", re.I)
+
+
+def team_phrase(job):
+    cat = job.get("category") or ""
+    return "computer vision" if cat.startswith("CV") else "machine learning" if cat.startswith("ML") else "engineering"
+
+
+def search_links(job):
+    co, team = job["company"], team_phrase(job)
+    li = "https://www.linkedin.com/search/results/people/?keywords="
+    g = "https://www.google.com/search?q="
+    return {
+        "LinkedIn: hiring managers": li + quote_plus(f"{co} {team} manager"),
+        "LinkedIn: recruiters": li + quote_plus(f"{co} technical recruiter"),
+        "LinkedIn: team members": li + quote_plus(f"{co} {team} engineer"),
+        "Google: managers & leads": g + quote_plus(
+            f'site:linkedin.com/in "{co}" ("engineering manager" OR "head of" OR "lead" OR founder) "{team}"'),
+        "Google: recruiters": g + quote_plus(f'site:linkedin.com/in "{co}" (recruiter OR "talent acquisition")'),
+    }
+
+
+def emails_in_posting(job):
+    found = {e.rstrip(".") for e in EMAIL_RE.findall(job.get("description") or "")}
+    return sorted(e for e in found if not GENERIC_INBOX.match(e))
+
+
+@st.cache_data(ttl=3600)
+def cached_contacts(company):
+    rows = db().table("contacts").select("results").eq("company", company.lower()).execute().data
+    return rows[0]["results"] if rows else None
+
+
+def hunter_lookup(company):
+    r = requests.get("https://api.hunter.io/v2/domain-search", timeout=20, params={
+        "company": company, "type": "personal", "limit": 25, "api_key": st.secrets["HUNTER_API_KEY"]})
+    r.raise_for_status()
+    people = []
+    for e in r.json().get("data", {}).get("emails", []):
+        if not RELEVANT_POS.search(e.get("position") or ""):
+            continue
+        people.append({k: e.get(k) for k in ("first_name", "last_name", "position", "value",
+                                              "linkedin", "confidence")})
+    people.sort(key=lambda p: -(p.get("confidence") or 0))
+    db().table("contacts").upsert({"company": company.lower(), "results": people,
+                                   "fetched_at": dt.datetime.utcnow().isoformat()}).execute()
+    st.cache_data.clear()
+
+
+def people_panel(job, key):
+    st.markdown(f"**People at {job['company']}**")
+    emails = emails_in_posting(job)
+    if emails:
+        st.markdown("In the posting: " + ", ".join(f"`{e}`" for e in emails))
+    for label, url in search_links(job).items():
+        st.markdown(f"- [{label}]({url})")
+    if "HUNTER_API_KEY" in st.secrets:
+        try:
+            cached = cached_contacts(job["company"])
+        except Exception:
+            cached = None
+            st.caption("Run migration_002_contacts.sql in Supabase to enable saved lookups.")
+        if cached is None:
+            if st.button("Look up emails (uses 1 Hunter credit)", key=f"hu-{key}"):
+                try:
+                    hunter_lookup(job["company"])
+                    st.rerun()
+                except Exception as e:
+                    st.error(f"Hunter lookup failed: {e}")
+        elif not cached:
+            st.caption("Hunter found no relevant people for this company.")
+        else:
+            for p in cached[:8]:
+                name = f"{p.get('first_name') or ''} {p.get('last_name') or ''}".strip() or "Unknown"
+                li = f" · [LinkedIn]({p['linkedin']})" if p.get("linkedin") else ""
+                st.markdown(f"- **{name}**, {p.get('position') or ''}  \n  `{p.get('value')}` "
+                            f"({p.get('confidence') or '?'}% confidence){li}")
+    st.caption("Verify before reaching out: the person hiring for this exact role may not show up here.")
+
+
 # ---------- ui pieces ----------
 def job_card(job, key):
     with st.container(border=True):
@@ -112,6 +199,8 @@ def job_card(job, key):
         right.button("Applied", key=f"a-{key}", on_click=mark_applied, args=(job,), type="primary",
                      use_container_width=True)
         right.button("Hide", key=f"h-{key}", on_click=hide_job, args=(job,), use_container_width=True)
+        with right.popover("People", use_container_width=True):
+            people_panel(job, key)
 
 
 # ---------- app ----------

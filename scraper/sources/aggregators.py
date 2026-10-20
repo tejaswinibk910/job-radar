@@ -12,8 +12,8 @@ SIMPLIFY_URLS = [
 ]
 
 
-def simplify():
-    for url in SIMPLIFY_URLS:
+def simplify(urls=None):
+    for url in urls or SIMPLIFY_URLS:
         try:
             r = SESSION.get(url, timeout=TIMEOUT)
             r.raise_for_status()
@@ -31,7 +31,7 @@ def simplify():
         if (j.get("date_posted") or 0) < cutoff:
             continue
         locs = j.get("locations") or []
-        out.append(make_job("simplify", j.get("company_name"), j.get("title"), "; ".join(locs),
+        out.append(make_job("github-lists", j.get("company_name"), j.get("title"), "; ".join(locs),
                             j.get("url"), "new grad entry level", j.get("date_posted"),
                             any("remote" in l.lower() for l in locs)))
     return out

@@ -34,3 +34,10 @@ create table if not exists applications (
 -- RLS on with no policies = only your secret key can read/write. Keeps your data private.
 alter table jobs enable row level security;
 alter table applications enable row level security;
+-- Run once in Supabase SQL Editor (adds a cache so Hunter lookups aren't repeated)
+create table if not exists contacts (
+  company     text primary key,          -- lowercased company name
+  results     jsonb not null default '[]',
+  fetched_at  timestamptz default now()
+);
+alter table contacts enable row level security;

@@ -1,0 +1,28 @@
+name: discover-companies
+
+on:
+  schedule:
+    - cron: "0 9 * * 1"   # every Monday: picks up newly hiring YC startups
+  workflow_dispatch:      # or run manually after editing companies_wishlist.txt
+
+permissions:
+  contents: write
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install requests pyyaml
+      - run: python -m scraper.tools discover
+      - name: Commit results
+        run: |
+          git config user.name "job-radar-bot"
+          git config user.email "job-radar-bot@users.noreply.github.com"
+          git add companies.discovered.yaml
+          git diff --cached --quiet || git commit -m "Update discovered companies"
+          git push

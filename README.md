@@ -4,9 +4,12 @@ Daily job scraper + resume matcher + application tracker.
 
 ```
 GitHub Actions (daily 7am ET)
-  └─ scraper/  → Greenhouse, Lever, Ashby, Workday, SmartRecruiters (direct company APIs)
-              → LinkedIn, Indeed, Google Jobs, ZipRecruiter, Glassdoor (python-jobspy)
-              → SimplifyJobs New-Grad list
+  └─ scraper/  → Greenhouse, Lever, Ashby, Workday, SmartRecruiters, Amazon (direct company APIs)
+              → LinkedIn, Indeed (python-jobspy)
+              → Adzuna, The Muse, Remotive, RemoteOK, Himalayas (public board APIs)
+              → HN "Who's Hiring", SimplifyJobs + other GitHub new-grad lists
+GitHub Actions (Mondays) → discover-companies: tests companies_wishlist.txt + hiring YC startups,
+                           writes companies.discovered.yaml (merged into the daily scrape)
      filter (US/remote, no clearance, no senior titles) → dedupe → score vs resume.txt
         └─ Supabase Postgres (every job ever seen + your applications)
               └─ Streamlit dashboard: New | Archive | Tracker
@@ -38,6 +41,7 @@ All tunable in `config.yaml`.
 1. Go to supabase.com → **Start your project** → sign in with GitHub.
 2. **New project**: name `job-radar`, set a database password (save it anywhere), region **East US**. Wait ~2 min.
 3. Left sidebar → **SQL Editor** → **New query** → paste all of `schema.sql` → **Run**.
+   (Safe to re-run anytime; it only creates what's missing.)
 4. Left sidebar → **Project Settings** → **API Keys**. Copy:
    - **Project URL** (also shown under Settings → Data API), e.g. `https://abcd.supabase.co`
    - the **secret** key (`sb_secret_...`). On older projects this is the `service_role` key.
@@ -47,7 +51,9 @@ All tunable in `config.yaml`.
 1. In your GitHub repo → **Settings** → **Secrets and variables** → **Actions** → **New repository secret**.
 2. Add `SUPABASE_URL` = your project URL.
 3. Add `SUPABASE_KEY` = the secret key.
-4. Go to the **Actions** tab → **daily-job-scrape** → **Run workflow**. First run takes ~10–20 min
+4. Optional: `ADZUNA_APP_ID` and `ADZUNA_APP_KEY` (free at developer.adzuna.com) for the Adzuna source.
+5. Go to the **Actions** tab → **discover-companies** → **Run workflow** (~5 min), then
+   **daily-job-scrape** → **Run workflow**. First run takes ~10–20 min
    (it fills the archive). Open the run's log to see counts per source and the top 10 matches.
 
 ### 4. Streamlit: host the dashboard
@@ -58,6 +64,7 @@ All tunable in `config.yaml`.
    SUPABASE_URL = "https://abcd.supabase.co"
    SUPABASE_KEY = "sb_secret_..."
    APP_PASSWORD = "something-only-you-know"
+   HUNTER_API_KEY = "optional, free at hunter.io (25 lookups/month)"
    ```
 4. **Deploy**. Bookmark the URL. The password gate keeps it private.
 
@@ -68,9 +75,12 @@ Done. It now runs every morning on its own.
 ## Daily use
 - **New**: jobs found in the last 1/3/7 days, best match first. **Applied** → moves it to Tracker. **Hide** → never see it again.
 - **Archive**: every posting ever scraped, searchable, sorted by match. This is your "old postings that fit my resume" view.
+- **People** (on each job): emails in the posting, prefilled LinkedIn/Google searches for managers and recruiters, optional Hunter lookup.
 - **Tracker**: change status (Saved → Applied → OA → Interview → Offer/Rejected), add notes, **Save changes**. Add jobs you found elsewhere via "Add manually".
 
 ## Adding companies
+Easiest: add a line to `companies_wishlist.txt` and run the **discover-companies** workflow.
+Manual / local:
 ```bash
 pip install -r scraper/requirements.txt
 python -m scraper.tools detect https://careers.somecompany.com   # prints the line to add to companies.yaml

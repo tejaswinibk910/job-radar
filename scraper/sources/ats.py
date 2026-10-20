@@ -103,3 +103,22 @@ def smartrecruiters(company, terms, title_ok):
                                 p.get("name"), loc_str, f"https://jobs.smartrecruiters.com/{company}/{p['id']}",
                                 desc, p.get("releasedDate"), loc.get("remote")))
     return out
+
+
+def amazon(terms, title_ok):
+    """amazon.jobs public search endpoint."""
+    seen, out = set(), []
+    for term in terms:
+        r = SESSION.get("https://www.amazon.jobs/en/search.json", params={
+            "base_query": term, "loc_query": "United States", "country": "USA",
+            "result_limit": 100, "sort": "recent"}, timeout=TIMEOUT)
+        r.raise_for_status()
+        for j in r.json().get("jobs", []):
+            jid = j.get("id_icims") or j.get("job_path")
+            if jid in seen or not title_ok(j.get("title")):
+                continue
+            seen.add(jid)
+            desc = " ".join(strip_html(j.get(k)) for k in ("description", "basic_qualifications", "preferred_qualifications"))
+            out.append(make_job("amazon", "Amazon", j.get("title"), j.get("normalized_location") or j.get("location"),
+                                "https://www.amazon.jobs" + (j.get("job_path") or ""), desc, None))
+    return out

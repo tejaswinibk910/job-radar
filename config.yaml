@@ -124,6 +124,11 @@ scoring:
 min_score_default: 40          # dashboard default filter
 
 jobspy:
-  sites: [linkedin, indeed, google, zip_recruiter, glassdoor]
+  sites: [linkedin, indeed]   # google/zip_recruiter/glassdoor block GitHub Actions IPs
   results_per_term: 30
   hours_old: 48
+
+# Other GitHub new-grad lists using the SimplifyJobs listings.json format (failures are just logged)
+extra_github_lists:
+  - https://raw.githubusercontent.com/vanshb03/New-Grad-2026/dev/.github/scripts/listings.json
+  - https://raw.githubusercontent.com/vanshb03/New-Grad-2027/dev/.github/scripts/listings.json

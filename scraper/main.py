@@ -10,7 +10,8 @@ from supabase import create_client
 from .common import ROOT, load_yaml
 from .filters import Filters
 from .matcher import Matcher
-from .sources import aggregators, ats
+from .sources import aggregators, ats, boards, startups
+from .tools import load_companies
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
 log = logging.getLogger("job-radar")
@@ -29,6 +30,15 @@ def collect(cfg, companies, flt):
     for c in companies.get("smartrecruiters") or []:
         tasks.append((f"smartrecruiters:{c}", lambda c=c: ats.smartrecruiters(c, cfg["ats_search_terms"], flt.title_ok)))
     tasks.append(("simplify", aggregators.simplify))
+    for url in cfg.get("extra_github_lists") or []:
+        tasks.append((f"github:{url.split('/')[4]}", lambda url=url: aggregators.simplify([url])))
+    tasks.append(("adzuna", lambda: boards.adzuna(cfg["search_terms"])))
+    tasks.append(("themuse", boards.themuse))
+    tasks.append(("remotive", lambda: boards.remotive(cfg["search_terms"])))
+    tasks.append(("remoteok", boards.remoteok))
+    tasks.append(("himalayas", boards.himalayas))
+    tasks.append(("hackernews", lambda: startups.hackernews(flt.include)))
+    tasks.append(("amazon", lambda: ats.amazon(cfg["ats_search_terms"], flt.title_ok)))
 
     jobs, failed = [], []
 
@@ -80,7 +90,7 @@ def main():
     except Exception as e:
         sys.exit(f"Can't reach the jobs table. Check SUPABASE_URL/SUPABASE_KEY and that schema.sql ran. ({e})")
 
-    cfg, companies = load_yaml("config.yaml"), load_yaml("companies.yaml")
+    cfg, companies = load_yaml("config.yaml"), load_companies()
     flt = Filters(cfg)
 
     raw, failed = collect(cfg, companies, flt)

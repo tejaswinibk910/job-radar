@@ -52,6 +52,10 @@ class Filters:
         return True  # unrecognised (e.g. "Hybrid", "Multiple Locations") -> keep
 
     def keep(self, job):
+        if job["source"] == "hackernews":
+            role_ok = any(p.search(job["title"]) or p.search(job["description"][:600]) for p in self.include)
+            return role_ok and self.location_ok(job["location"], job.get("is_remote")) \
+                and not self.clearance_blocked(job)
         return (
             self.title_ok(job["title"])
             and self.location_ok(job["location"], job.get("is_remote"))

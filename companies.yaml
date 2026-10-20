@@ -2,9 +2,11 @@
 # Add a company: find its careers page, run  python -m scraper.tools detect <careers-url>
 # then add the slug below. Run  python -m scraper.tools validate  to check every entry.
 
+# Removed (moved off these ATSs, re-add via `detect`): deepmind, appliedintuition, aurorainnovation,
+#   skydio, hudsonrivertrading, mistral, Visa
+
 greenhouse:   # boards.greenhouse.io/<slug>
   - anthropic
-  - deepmind
   - xai
   - scaleai
   - databricks
@@ -16,9 +18,6 @@ greenhouse:   # boards.greenhouse.io/<slug>
   - waymo
   - nuro
   - andurilindustries
-  - appliedintuition
-  - aurorainnovation
-  - skydio
   - instacart
   - dropbox
   - coinbase
@@ -43,12 +42,10 @@ greenhouse:   # boards.greenhouse.io/<slug>
   - gusto
   - flexport
   - vercel
-  - hudsonrivertrading
 
 lever:        # jobs.lever.co/<slug>
   - palantir
   - spotify
-  - mistral
   - shieldai
   - zoox
 
@@ -75,5 +72,4 @@ workday:      # <tenant>.<wd>.myworkdayjobs.com/<site>
   - {name: Capital One, tenant: capitalone, wd: wd12, site: Capital_One}
 
 smartrecruiters:   # jobs.smartrecruiters.com/<id>
-  - Visa
   - BoschGroup
