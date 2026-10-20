@@ -27,7 +27,8 @@ def gate():
 
 @st.cache_resource
 def db():
-    return create_client(st.secrets["SUPABASE_URL"], st.secrets["SUPABASE_KEY"])
+    url = re.match(r"\s*(https://[^/\s]+)", st.secrets["SUPABASE_URL"]).group(1)
+    return create_client(url, st.secrets["SUPABASE_KEY"].strip())
 
 
 def refresh():
