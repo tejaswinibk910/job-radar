@@ -81,6 +81,16 @@ role_tiers:
     pattern: '.'
     points: -12
 
+# ---- Seniority ----
+# Senior roles (senior titles, III+/L5+, or requiring more than max_years) are dropped entirely.
+seniority:
+  max_years: 4            # drop if the MINIMUM years asked is above this
+  points:                 # added to the score
+    New Grad: 10
+    Entry: 6
+    Unknown: 0
+    Mid: -10
+
 # ---- Scoring (0-100) ----
 scoring:
   similarity_weight: 70        # semantic resume match contributes up to this much
@@ -111,15 +121,9 @@ scoring:
     cuda: 2
     distributed training: 2
     hpc: 2
-    new grad: 6
-    'university graduate': 6
-    entry.level: 5
-    early career: 5
     "master'?s": 2
   penalties:                   # -points if found
-    '([5-9]|1[0-9])\+? years': 15
     'phd (required|only)': 12
-    'senior': 8
 
 min_score_default: 40          # dashboard default filter
 

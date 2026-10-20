@@ -4,6 +4,7 @@ import re
 import numpy as np
 
 from .common import ROOT
+from .seniority import classify
 
 
 def _chunks(text, size=800):
@@ -27,6 +28,7 @@ class Matcher:
         self.s = s
         self.boosts = [(re.compile(k, re.I), v) for k, v in s["boost_keywords"].items()]
         self.penalties = [(re.compile(k, re.I), v) for k, v in s["penalties"].items()]
+        self.sen = cfg["seniority"]
         self.tiers = [(t["name"], re.compile(t["pattern"], re.I), t["points"]) for t in cfg["role_tiers"]]
         r = self._embed(_chunks(resume_text)).mean(axis=0)
         self.resume_vec = r / np.linalg.norm(r)
@@ -49,6 +51,8 @@ class Matcher:
             penalty = sum(v for p, v in self.penalties if p.search(text))
             cat, tier_pts = next(((n, pts) for n, p, pts in self.tiers if p.search(j["title"])), ("Other", 0))
             j["category"] = cat
-            raw = frac * s["similarity_weight"] + boost - penalty + tier_pts
+            level, _ = classify(j["title"], j["description"], self.sen["max_years"])
+            j["seniority"] = level
+            raw = frac * s["similarity_weight"] + boost - penalty + tier_pts + self.sen["points"].get(level, 0)
             j["score"] = round(float(np.clip(raw, 0, 100)), 1)
             j["matched_keywords"] = [h.replace("\\b", "").replace("'?", "'") for h in hits]

@@ -1,6 +1,7 @@
 """Helpers.
   python -m scraper.tools validate        -> checks every company in companies.yaml responds
   python -m scraper.tools detect <url>    -> guesses which ATS a careers page uses + the slug
+  python -m scraper.tools rescore         -> re-scores all stored jobs after you change resume.txt/config.yaml
   python -m scraper.tools discover        -> tests every name in companies_wishlist.txt, writes companies.discovered.yaml
 """
 import re
@@ -60,7 +61,7 @@ if __name__ == "__main__":
         detect(sys.argv[2])
     elif len(sys.argv) >= 2 and sys.argv[1] == "validate":
         validate()
-    elif len(sys.argv) < 2 or sys.argv[1] not in ("discover",):
+    elif len(sys.argv) < 2 or sys.argv[1] not in ("discover", "rescore"):
         print(__doc__)
 
 
@@ -164,3 +165,46 @@ def load_companies():
 
 if __name__ == "__main__" and len(sys.argv) >= 2 and sys.argv[1] == "discover":
     discover()
+
+
+# ---------------- rescore ----------------
+def rescore():
+    """Re-scores every stored job with the current resume.txt + config.yaml. Hides jobs now classed Senior."""
+    import os
+
+    from supabase import create_client
+
+    from .matcher import Matcher
+    from .seniority import classify
+
+    url = re.match(r"\s*(https://[^/\s]+)", os.environ["SUPABASE_URL"]).group(1)
+    db = create_client(url, os.environ["SUPABASE_KEY"].strip())
+    cfg = load_yaml("config.yaml")
+    rows, start = [], 0
+    while True:
+        batch = db.table("jobs").select("id,title,company,description").range(start, start + 999).execute().data
+        rows += batch
+        if len(batch) < 1000:
+            break
+        start += 1000
+    print(f"Rescoring {len(rows)} jobs")
+    for r in rows:
+        r["description"] = r.get("description") or ""
+    Matcher((ROOT / "resume.txt").read_text(), cfg).score(rows)
+    updates = []
+    for r in rows:
+        senior = classify(r["title"], r["description"], cfg["seniority"]["max_years"])[0] == "Senior"
+        updates.append({"id": r["id"], "score": r["score"], "category": r["category"],
+                        "seniority": r["seniority"], "matched_keywords": r["matched_keywords"],
+                        **({"hidden": True} if senior else {})})
+    hidden = sum(1 for u in updates if u.get("hidden"))
+    for n, u in enumerate(updates, 1):  # row-by-row partial updates; ~2k rows takes a few minutes
+        uid = u.pop("id")
+        db.table("jobs").update(u).eq("id", uid).execute()
+        if n % 500 == 0:
+            print(f"  {n}/{len(updates)}")
+    print(f"Done. {hidden} jobs hidden as Senior.")
+
+
+if __name__ == "__main__" and len(sys.argv) >= 2 and sys.argv[1] == "rescore":
+    rescore()

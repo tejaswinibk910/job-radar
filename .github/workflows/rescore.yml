@@ -1,0 +1,25 @@
+name: rescore-all-jobs
+
+on:
+  workflow_dispatch:   # run after changing resume.txt or config.yaml
+
+jobs:
+  rescore:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: scraper/requirements.txt
+      - uses: actions/cache@v4
+        with:
+          path: .model_cache
+          key: fastembed-bge-small-en-v1.5
+      - run: pip install -r scraper/requirements.txt
+      - run: python -m scraper.tools rescore
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}

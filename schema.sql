@@ -12,6 +12,7 @@ create table if not exists jobs (
   first_seen       date not null default current_date,
   score            real,
   category         text,                       -- CV / Perception, ML / AI, SWE
+  seniority        text,                       -- New Grad, Entry, Mid, Unknown
   matched_keywords text[],
   is_remote        boolean,
   hidden           boolean not null default false
@@ -41,3 +42,7 @@ create table if not exists contacts (
   fetched_at  timestamptz default now()
 );
 alter table contacts enable row level security;
+
+-- Upgrades for databases created before these columns existed (safe to re-run)
+alter table jobs add column if not exists category text;
+alter table jobs add column if not exists seniority text;

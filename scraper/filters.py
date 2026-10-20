@@ -1,5 +1,7 @@
 import re
 
+from .seniority import classify
+
 US_STATE_NAMES = r"alabama|alaska|arizona|arkansas|california|colorado|connecticut|delaware|florida|georgia|hawaii|idaho|illinois|indiana|iowa|kansas|kentucky|louisiana|maine|maryland|massachusetts|michigan|minnesota|mississippi|missouri|montana|nebraska|nevada|new hampshire|new jersey|new mexico|new york|north carolina|north dakota|ohio|oklahoma|oregon|pennsylvania|rhode island|south carolina|south dakota|tennessee|texas|utah|vermont|virginia|washington|west virginia|wisconsin|wyoming|district of columbia"
 US_CITIES = r"san francisco|bay area|seattle|boston|austin|chicago|los angeles|san jose|sunnyvale|mountain view|palo alto|menlo park|redmond|cupertino|santa clara|san diego|denver|atlanta|pittsburgh|nyc|brooklyn|rochester|cambridge, ma|ann arbor|raleigh|durham|dallas|houston|miami|philadelphia|portland|salt lake|boulder|irvine|detroit|minneapolis|washington,? d\.?c"
 US_ABBR = "AL|AK|AZ|AR|CA|CO|CT|DE|FL|GA|HI|ID|IL|IN|IA|KS|KY|LA|ME|MD|MA|MI|MN|MS|MO|MT|NE|NV|NH|NJ|NM|NY|NC|ND|OH|OK|OR|PA|RI|SC|SD|TN|TX|UT|VT|VA|WA|WV|WI|WY|DC"
@@ -25,6 +27,10 @@ class Filters:
         self.include = compile_list(cfg["title_include"])
         self.exclude = compile_list(cfg["title_exclude"])
         self.clearance = compile_list(cfg["clearance_patterns"])
+        self.max_years = cfg["seniority"]["max_years"]
+
+    def too_senior(self, job):
+        return classify(job["title"], job["description"], self.max_years)[0] == "Senior"
 
     def title_ok(self, title):
         t = title or ""
@@ -55,9 +61,10 @@ class Filters:
         if job["source"] == "hackernews":
             role_ok = any(p.search(job["title"]) or p.search(job["description"][:600]) for p in self.include)
             return role_ok and self.location_ok(job["location"], job.get("is_remote")) \
-                and not self.clearance_blocked(job)
+                and not self.clearance_blocked(job) and not self.too_senior(job)
         return (
             self.title_ok(job["title"])
             and self.location_ok(job["location"], job.get("is_remote"))
             and not self.clearance_blocked(job)
+            and not self.too_senior(job)
         )
