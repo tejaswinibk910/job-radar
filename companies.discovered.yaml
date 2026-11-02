@@ -44,6 +44,7 @@ ashby:
 - belvo
 - beyondreachlabs
 - bild-ai
+- billiontoone
 - black-forest-labs
 - blacksmith
 - bland
@@ -84,7 +85,9 @@ ashby:
 - clipboard
 - codes-health
 - cognition
+- cointracker
 - comena
+- commodityai
 - complir
 - concourse
 - conductor
@@ -174,7 +177,6 @@ ashby:
 - kivo-health
 - klarify
 - knowtex
-- lago
 - lambda
 - lance
 - langchain
@@ -191,11 +193,11 @@ ashby:
 - lumaai
 - luminai
 - mach9
+- magic
 - magicpatterns
 - mangodesk
 - marble
 - mednet
-- mem0
 - mercura
 - metal
 - meticulous
@@ -274,6 +276,7 @@ ashby:
 - rivia
 - roboflow
 - rollstack
+- runtrellis
 - ryvn
 - safetykit
 - salespatriot
@@ -311,6 +314,7 @@ ashby:
 - substrate
 - svix
 - sweep
+- sweetspot
 - sygaldry-technologies
 - tailor
 - taktile
@@ -319,14 +323,12 @@ ashby:
 - tavus
 - tekton-dynamics
 - telli
-- tempo
 - tennr
 - tenor
 - terminal
 - thera
 - thinkingmachines
 - thundercompute
-- tilt
 - titan
 - topline-pro
 - triomics
@@ -346,7 +348,6 @@ ashby:
 - verahealth
 - veritus
 - versemedical
-- verto
 - vetcove
 - vitalize
 - voize
@@ -374,7 +375,6 @@ greenhouse:
 - astranis
 - axle
 - beam
-- billiontoone
 - bitmovin
 - blacksky
 - block
@@ -398,6 +398,7 @@ greenhouse:
 - ginkgobioworks
 - gleanwork
 - gomotive
+- guild
 - hackerrank
 - haven
 - hazel
@@ -454,8 +455,8 @@ greenhouse:
 - spaceium
 - stabilityai
 - stackav
-- superset
 - swayable
+- tempo
 - tenstorrent
 - togetherai
 - torcrobotics
@@ -477,6 +478,7 @@ lever:
 - handoff
 - hermeus
 - mashgin
+- meesho
 - merlinlabs
 - multiplylabs
 - mytos
@@ -489,14 +491,12 @@ lever:
 - text
 - thunkable
 - twodots
-- unusual
 - vergesense
 - voltalabs
 - waabi
 smartrecruiters:
 - alemhealth
 - canva
-- finku
 - nearmap
 - palantir
 - picnic
