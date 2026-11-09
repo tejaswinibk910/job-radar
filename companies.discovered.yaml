@@ -66,10 +66,10 @@ ashby:
 - capy
 - carbon-robotics
 - cardboard
+- caribou
 - casca
 - casco
 - castle
-- centralize
 - cerebras
 - character
 - charge-robotics
@@ -88,9 +88,9 @@ ashby:
 - cointracker
 - comena
 - commodityai
+- complif
 - complir
 - concourse
-- conductor
 - conduit
 - confido
 - conveo
@@ -137,6 +137,7 @@ ashby:
 - flowtel
 - formance
 - fortuna-health
+- fours
 - freshpaint
 - furtherai
 - garage
@@ -160,6 +161,7 @@ ashby:
 - hyperbound
 - hypercubic
 - iambic-therapeutics
+- infera
 - infinite
 - infisical
 - influxdata
@@ -192,12 +194,15 @@ ashby:
 - lucis
 - lumaai
 - luminai
+- luminal
 - mach9
+- machina-labs
 - magic
 - magicpatterns
 - mangodesk
 - marble
 - mednet
+- mem0
 - mercura
 - metal
 - meticulous
@@ -210,6 +215,7 @@ ashby:
 - mutiny
 - nango
 - nash
+- nectar
 - niantic-spatial
 - nomic
 - nowadays
@@ -230,6 +236,7 @@ ashby:
 - parameter
 - pax-historia
 - permitflow
+- pharos
 - phoenix
 - phonely
 - physicalintelligence
@@ -266,7 +273,6 @@ ashby:
 - reka
 - relace
 - reliable-robotics
-- relling
 - replo
 - rescale
 - retell-ai
@@ -287,7 +293,6 @@ ashby:
 - serverobotics
 - sf-tensor
 - shadeform
-- shieldai
 - shortstory
 - sierra
 - sieve
@@ -311,7 +316,6 @@ ashby:
 - stepful
 - stilta
 - stream
-- substrate
 - svix
 - sweep
 - sweetspot
@@ -380,7 +384,6 @@ greenhouse:
 - block
 - burnt
 - butterflynetwork
-- caribou
 - checkr
 - clara
 - coast
@@ -429,7 +432,6 @@ greenhouse:
 - motional
 - muonspace
 - netradyne
-- newton
 - nimblerobotics
 - novacredit
 - ophelia
@@ -441,6 +443,7 @@ greenhouse:
 - pelago
 - planetlabs
 - porter
+- postscript
 - prodigal
 - prolific
 - pulse
@@ -468,8 +471,8 @@ greenhouse:
 lever:
 - Cofactr
 - Farcast
-- MachinaLabs
 - anybotics
+- blue
 - brightmachines
 - dexterity
 - epsilon3
@@ -483,14 +486,16 @@ lever:
 - multiplylabs
 - mytos
 - netomi
+- newton
 - people-ai
 - postera
 - prosper
+- quartzy
 - sapling
 - skyways
 - text
 - thunkable
-- twodots
+- unusual
 - vergesense
 - voltalabs
 - waabi
