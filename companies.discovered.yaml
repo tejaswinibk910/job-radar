@@ -22,6 +22,7 @@ ashby:
 - anthrogen
 - anyscale
 - apolink
+- apollo
 - aragorn
 - arini
 - artie
@@ -44,7 +45,6 @@ ashby:
 - belvo
 - beyondreachlabs
 - bild-ai
-- billiontoone
 - black-forest-labs
 - blacksmith
 - bland
@@ -81,7 +81,6 @@ ashby:
 - claim-health
 - claimsorted
 - clarion
-- clearly-ai
 - clipboard
 - codes-health
 - cognition
@@ -100,7 +99,6 @@ ashby:
 - ctgt
 - cursor
 - d-Matrix
-- darwin
 - datafold
 - dataleap
 - david-ai
@@ -109,6 +107,7 @@ ashby:
 - deepgram
 - deepnote
 - diligencesquared
+- diode
 - dispatch
 - ditto
 - dodo
@@ -131,7 +130,6 @@ ashby:
 - fireworks
 - firstwork
 - flai
-- fleetline
 - fleetworks
 - flint
 - flowtel
@@ -161,7 +159,6 @@ ashby:
 - hyperbound
 - hypercubic
 - iambic-therapeutics
-- infera
 - infinite
 - infisical
 - influxdata
@@ -177,18 +174,17 @@ ashby:
 - kastle
 - kingdom
 - kivo-health
-- klarify
 - knowtex
 - lambda
 - lance
 - langchain
-- langdock
 - lapel
 - latent
 - legionhealth
 - legora
 - lightdash
 - litellm
+- litmus
 - liveflow
 - llamaindex
 - lucis
@@ -201,7 +197,6 @@ ashby:
 - magicpatterns
 - mangodesk
 - marble
-- mednet
 - mem0
 - mercura
 - metal
@@ -222,7 +217,6 @@ ashby:
 - nox-metals
 - numeral
 - offdeal
-- offstream
 - onechronos
 - oneleet
 - onerobot
@@ -255,7 +249,6 @@ ashby:
 - prelim
 - probablygenetic
 - promise
-- provision
 - pylon
 - quicknode
 - quindar
@@ -273,6 +266,7 @@ ashby:
 - reka
 - relace
 - reliable-robotics
+- relling
 - replo
 - rescale
 - retell-ai
@@ -323,7 +317,6 @@ ashby:
 - tailor
 - taktile
 - tamarindbio
-- tank-payments
 - tavus
 - tekton-dynamics
 - telli
@@ -348,6 +341,7 @@ ashby:
 - usul
 - vanta
 - vapi
+- variance
 - vector
 - verahealth
 - veritus
@@ -379,6 +373,7 @@ greenhouse:
 - astranis
 - axle
 - beam
+- billiontoone
 - bitmovin
 - blacksky
 - block
@@ -425,10 +420,8 @@ greenhouse:
 - lucidmotors
 - maymobility
 - meruhealth
-- mesh
 - modernhealth
 - momentic
-- morph
 - motional
 - muonspace
 - netradyne
@@ -444,6 +437,7 @@ greenhouse:
 - planetlabs
 - porter
 - postscript
+- preload
 - prodigal
 - prolific
 - pulse
@@ -467,6 +461,7 @@ greenhouse:
 - verkada
 - voxel51
 - xendit
+- yuma
 - zestyai
 lever:
 - Cofactr
@@ -488,13 +483,13 @@ lever:
 - netomi
 - newton
 - people-ai
-- postera
 - prosper
 - quartzy
 - sapling
 - skyways
 - text
 - thunkable
+- twodots
 - unusual
 - vergesense
 - voltalabs
